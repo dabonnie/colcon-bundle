@@ -19,11 +19,11 @@ jobs:
       - name: setup-ros-docker#7 workaround
         run: sudo chown -R rosbuild:rosbuild "$HOME" .
       - uses: ros-tooling/action-ros-ci@0.0.17
-        id: action-ros-navigation
+        id: build-from-repos
         with:
+          vcs-repo-file-url: "${{ github.workspace }}/.github/workflows/test_bundle.repos"
           package-name: ros_tutorials navigation
           source-ros-binary-installation: kinetic
-          vcs-repo-file-url: "https://raw.githubusercontent.com/colcon/colcon-bundle/${{ github.sha }}/.github/workflows/test_bundle.repos"
       - name: Install colcon-bundle dependencies
         run: |
           sudo apt update
@@ -33,5 +33,5 @@ jobs:
         run: sudo pip3 install -U ${{ matrix.install_colcon_bundle_cmd }}
       - name: Run colcon bundle
         run: |
-          cd "${{ steps.action-ros-navigation.outputs.ros-workspace-directory-name }}"
+          cd "${{ steps.build-from-repos.outputs.ros-workspace-directory-name }}"
           colcon bundle
